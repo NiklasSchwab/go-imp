@@ -11,6 +11,8 @@ type Stmt interface {
 
 // Different statements
 
+type Prog [1]Block
+type Block [1]Stmt
 type Seq [2]Stmt
 type Decl struct {
 	lhs string
@@ -34,9 +36,14 @@ type Print struct {
 }
 
 // Pretty prints
-
+func (prg Prog) pretty() string {
+	return prg[0].pretty()
+}
+func (blck Block) pretty() string {
+	return "{\n" + blck[0].pretty() + "\n}"
+}
 func (stmt Seq) pretty() string {
-	return stmt[0].pretty() + "; " + stmt[1].pretty()
+	return stmt[0].pretty() + ";\n" + stmt[1].pretty()
 }
 func (decl Decl) pretty() string {
 	return decl.lhs + " := " + decl.rhs.pretty()
@@ -61,7 +68,12 @@ func (p Print) pretty() string {
 }
 
 // Evals
-
+func (prg Prog) eval(s ValState) {
+	prg[0].eval(s)
+}
+func (blck Block) eval(s ValState) {
+	blck[0].eval(s)
+}
 func (stmt Seq) eval(s ValState) {
 	stmt[0].eval(s)
 	stmt[1].eval(s)
@@ -81,11 +93,12 @@ func (asgn Assign) eval(s ValState) {
 	}
 }
 func (while While) eval(s ValState) {
+	s2 := make(map[string]Val)
 	for {
 		v := while.cond.eval(s)
 		if v.flag == ValueBool {
 			if v.valB == true {
-				while.doStmt.eval(s)
+				while.doStmt.eval(s2)
 			} else {
 				break
 			}
@@ -96,13 +109,14 @@ func (while While) eval(s ValState) {
 	}
 }
 func (ite IfThenElse) eval(s ValState) {
+	s2 := make(map[string]Val)
 	v := ite.cond.eval(s)
 	if v.flag == ValueBool {
 		switch {
 		case v.valB:
-			ite.thenStmt.eval(s)
+			ite.thenStmt.eval(s2)
 		case !v.valB:
-			ite.elseStmt.eval(s)
+			ite.elseStmt.eval(s2)
 		}
 	} else {
 		fmt.Printf("if-then-else eval fail")
@@ -114,7 +128,12 @@ func (p Print) eval(s ValState) {
 }
 
 // Type checks
-
+func (prg Prog) check(t TyState) bool {
+	return prg[0].check(t)
+}
+func (blck Block) check(t TyState) bool {
+	return blck[0].check(t)
+}
 func (stmt Seq) check(t TyState) bool {
 	if !stmt[0].check(t) {
 		return false

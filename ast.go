@@ -14,15 +14,17 @@ func runExp(e Exp) {
 	fmt.Printf("\n")
 }
 
-func runProg(prog Stmt) {
+func (prg Prog) run() {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
 
-	fmt.Printf("\n ************************** \n")
-	fmt.Printf("\n %s \n", prog.pretty())
-	fmt.Println(prog.check(t))
-	prog.eval(s)
-	fmt.Printf("\n ************************** \n")
+	fmt.Printf("\n**************************\n")
+	fmt.Printf("CODE FROM AST:\n")
+	fmt.Printf("%s\n\n", prg.pretty())
+	fmt.Printf("TYPE CHECK: %t\n\n", prg.check(t))
+	fmt.Printf("EVAL RESULT: ")
+	prg.eval(s)
+	fmt.Printf("\n")
 }
 
 // Expressions
@@ -63,6 +65,12 @@ func variable(x string) Exp {
 
 // Statements
 
+func prog(b Block) Prog {
+	return [1]Block{b}
+}
+func block(s Stmt) Block {
+	return [1]Stmt{s}
+}
 func sequence(x Stmt, y Stmt) Stmt {
 	return (Seq)([2]Stmt{x, y})
 }
@@ -80,4 +88,19 @@ func ifthenelse(cond Exp, th Stmt, el Stmt) Stmt {
 }
 func sPrint(s Exp) Stmt {
 	return Print{s}
+}
+
+// Helper to create a program from multiple "lines" of statements
+func generateProg(lines []Stmt) Prog {
+	return prog(block(generateSeq(lines)))
+}
+
+func generateSeq(lines []Stmt) Stmt {
+	if len(lines) > 1 {
+		return sequence(lines[0], generateSeq(lines[1:]))
+	} else if len(lines) == 1 {
+		return lines[0]
+	} else {
+		panic("ERROR WHILE GENERATING SEQUENCES!")
+	}
 }
