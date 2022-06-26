@@ -1,53 +1,121 @@
 package main
 
 // Examples
+func fib() {
+	l01 := declaration("prev", number(-1))
+	l02 := declaration("result", number(1))
 
-func ex1() {
-	ast := plus(mult(number(1), number(2)), number(0))
-	runExp(ast)
+	do01 := declaration("sum", plus(variable("prev"), variable("result")))
+	do02 := assignment("prev", variable("result"))
+	do03 := assignment("result", variable("sum"))
+	do04 := sPrint(variable("result"))
+	doBlock := block(generateSeq([]Stmt{do01, do02, do03, do04}))
+
+	l03 := while(lesser(variable("result"), number(50)), doBlock)
+
+	prog := generateProg([]Stmt{l01, l02, l03})
+	prog.run()
 }
 
-func ex2() {
-	ast := and(boolean(false), number(0))
-	runExp(ast)
+func ex01() {
+	l01 := declaration("x", number(1))
+	l02 := declaration("y", boolean(true))
+
+	cond := or(equal(variable("x"), number(0)), equal(negation(variable("y")), boolean(false)))
+	then01 := assignment("x", plus(variable("x"), number(10)))
+	then02 := declaration("y", number(7))
+	then03 := declaration("z", boolean(false))
+	else01 := declaration("y", number(7))
+	else02 := declaration("x", mult(number(7), variable("y")))
+	else03 := declaration("z", number(1))
+	else04 := assignment("x", plus(variable("x"), variable("z")))
+	thenBl := block(generateSeq([]Stmt{then01, then02, then03}))
+	elseBl := block(generateSeq([]Stmt{else01, else02, else03, else04}))
+
+	l03 := ifthenelse(cond, thenBl, elseBl)
+	l04 := sPrint(variable("x"))
+	l05 := sPrint(variable("y"))
+	l06 := sPrint(variable("z"))
+
+	prog := generateProg([]Stmt{l01, l02, l03, l04, l05, l06})
+	prog.run()
 }
 
-func ex3() {
-	ast := or(boolean(false), number(0))
-	runExp(ast)
+func ex02() {
+	l01 := declaration("x", number(1))
+	l02 := declaration("y", boolean(true))
+
+	cond := and(equal(variable("x"), number(0)), equal(negation(variable("y")), boolean(false)))
+	then01 := assignment("x", plus(variable("x"), number(10)))
+	then02 := declaration("y", number(7))
+	then03 := declaration("z", boolean(false))
+	else01 := declaration("y", number(7))
+	else02 := declaration("x", mult(number(7), variable("y")))
+	else03 := declaration("z", number(1))
+	else04 := assignment("x", plus(variable("x"), variable("z")))
+	thenBl := block(generateSeq([]Stmt{then01, then02, then03}))
+	elseBl := block(generateSeq([]Stmt{else01, else02, else03, else04}))
+
+	l03 := ifthenelse(cond, thenBl, elseBl)
+	l04 := sPrint(variable("x"))
+	l05 := sPrint(variable("y"))
+	l06 := sPrint(variable("z"))
+
+	prog := generateProg([]Stmt{l01, l02, l03, l04, l05, l06})
+	prog.run()
 }
 
-func ex4() {
-	ast := negation(negation(equal(lesser(number(3), number(5)), lesser(number(1), number(10)))))
-	runExp(ast)
+func ex03() {
+	l01 := declaration("i", number(0))
+	l02 := declaration("j", number(5))
+
+	cond := lesser(variable("i"), variable("j"))
+	do01 := assignment("i", plus(variable("i"), number(1)))
+	do02 := declaration("j", boolean(true))
+	do03 := sPrint(variable("i"))
+	do04 := sPrint(variable("j"))
+	doB := block(generateSeq([]Stmt{do01, do02, do03, do04}))
+
+	l03 := while(cond, doB)
+
+	prog := generateProg([]Stmt{l01, l02, l03})
+	prog.run()
 }
 
-func ex5() {
-	l01 := declaration("x", number(2))
-	l02 := declaration("y", mult(variable("x"), number(3)))
-	l03 := sPrint(variable("y"))
+func ex04() {
+	l01 := declaration("x", number(4))
+	l02 := assignment("x", boolean(false))
 
-	code := generateProg([]Stmt{l01, l02, l03})
-	code.run()
+	prog := generateProg([]Stmt{l01, l02})
+	prog.run()
 }
 
-func ex6() {
-	l01 := declaration("x", number(0))
-	do := sequence(sPrint(variable("x")), assignment("x", plus(variable("x"), number(1))))
-	l02 := while(lesser(variable("x"), number(10)), do)
+func ex05() {
+	l01 := declaration("x", number(4))
+	l02 := declaration("x", boolean(false))
 
-	code := generateProg([]Stmt{l01, l02})
-	code.run()
+	prog := generateProg([]Stmt{l01, l02})
+	prog.run()
 }
 
-func ex7() {
-	l01 := declaration("x", boolean(true))
-	doThis_01 := declaration("x", number(1))
-	doThis_02 := sPrint(number(42))
-	doThis := sequence(doThis_01, doThis_02)
-	l02 := while(equal(variable("x"), boolean(true)), doThis)
-	l03 := sPrint(variable("x"))
+func ex06() {
+	l01 := assignment("x", number(4))
+	prog := generateProg([]Stmt{l01})
+	prog.run()
+}
 
-	code := generateProg([]Stmt{l01, l02, l03})
-	code.run()
+func ex07() {
+	l01 := sPrint(variable("x"))
+	prog := generateProg([]Stmt{l01})
+	prog.run()
+}
+
+func ex08() {
+	l01 := declaration("x", number(4))
+	do := block(sPrint(variable("x")))
+	cond := equal(variable("x"), boolean(true))
+	l02 := while(cond, do)
+
+	prog := generateProg([]Stmt{l01, l02})
+	prog.run()
 }

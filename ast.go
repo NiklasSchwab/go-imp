@@ -18,13 +18,16 @@ func (prg Prog) run() {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
 
-	fmt.Printf("\n**************************\n")
+	fmt.Printf("\n")
 	fmt.Printf("CODE FROM AST:\n")
 	fmt.Printf("%s\n\n", prg.pretty())
 	fmt.Printf("TYPE CHECK: %t\n\n", prg.check(t))
-	fmt.Printf("EVAL RESULT: ")
+	fmt.Printf("RUNTIME RESULT:\n")
 	prg.eval(s)
 	fmt.Printf("\n")
+	fmt.Printf("\n**************************\n")
+	fmt.Printf("\n")
+
 }
 
 // Expressions
@@ -80,10 +83,10 @@ func declaration(lhs string, rhs Exp) Stmt {
 func assignment(lhs string, rhs Exp) Stmt {
 	return Assign{lhs, rhs}
 }
-func while(cond Exp, do Stmt) Stmt {
+func while(cond Exp, do Block) Stmt {
 	return While{cond, do}
 }
-func ifthenelse(cond Exp, th Stmt, el Stmt) Stmt {
+func ifthenelse(cond Exp, th Block, el Block) Stmt {
 	return IfThenElse{cond, th, el}
 }
 func sPrint(s Exp) Stmt {

@@ -23,13 +23,13 @@ type Assign struct {
 	rhs Exp
 }
 type While struct {
-	cond   Exp
-	doStmt Stmt
+	cond Exp
+	do   Block
 }
 type IfThenElse struct {
-	cond     Exp
-	thenStmt Stmt
-	elseStmt Stmt
+	cond   Exp
+	thenBl Block
+	elseBl Block
 }
 type Print struct {
 	printExp Exp
@@ -52,16 +52,10 @@ func (asgn Assign) pretty() string {
 	return asgn.lhs + " = " + asgn.rhs.pretty()
 }
 func (while While) pretty() string {
-	return "while " + while.cond.pretty() + " {\n" +
-		while.doStmt.pretty() +
-		"\n}"
+	return "while " + while.cond.pretty() + while.do.pretty()
 }
 func (ite IfThenElse) pretty() string {
-	return "if " + ite.cond.pretty() + " {\n" +
-		ite.thenStmt.pretty() +
-		"\n}" + " else " + "{\n" +
-		ite.elseStmt.pretty() +
-		"\n}"
+	return "if " + ite.cond.pretty() + ite.thenBl.pretty() + " else " + ite.elseBl.pretty()
 }
 func (p Print) pretty() string {
 	return "print " + p.printExp.pretty()
@@ -86,20 +80,30 @@ func (decl Decl) eval(s ValState) {
 func (asgn Assign) eval(s ValState) {
 	v := asgn.rhs.eval(s)
 	x := (string)(asgn.lhs)
-	if _, exists := s[x]; exists {
+	oldVal, exists := s[x]
+	if exists && (oldVal.flag == v.flag) {
 		s[x] = v
 	} else {
 		fmt.Printf("assign eval fail")
 	}
 }
-func (while While) eval(s ValState) {
+func (while While) eval(s1 ValState) {
 	s2 := make(map[string]Val)
+	for k, v := range s1 {
+		s2[k] = v
+	}
+
 	for {
-		v := while.cond.eval(s)
+		v := while.cond.eval(s2)
 		if v.flag == ValueBool {
 			if v.valB == true {
-				while.doStmt.eval(s2)
+				while.do.eval(s2)
+				s2 = s1.update(s2)
 			} else {
+				s3 := s1.update(s2)
+				for k, _ := range s1 {
+					s1[k] = s3[k]
+				}
 				break
 			}
 		} else {
@@ -108,23 +112,31 @@ func (while While) eval(s ValState) {
 		}
 	}
 }
-func (ite IfThenElse) eval(s ValState) {
+func (ite IfThenElse) eval(s1 ValState) {
 	s2 := make(map[string]Val)
-	v := ite.cond.eval(s)
+	for k, v := range s1 {
+		s2[k] = v
+	}
+
+	v := ite.cond.eval(s1)
 	if v.flag == ValueBool {
 		switch {
 		case v.valB:
-			ite.thenStmt.eval(s2)
+			ite.thenBl.eval(s2)
 		case !v.valB:
-			ite.elseStmt.eval(s2)
+			ite.elseBl.eval(s2)
 		}
 	} else {
 		fmt.Printf("if-then-else eval fail")
 	}
+	s3 := s1.update(s2)
+	for k, _ := range s1 {
+		s1[k] = s3[k]
+	}
 }
 func (p Print) eval(s ValState) {
 	v := p.printExp.eval(s)
-	fmt.Printf(showVal(v))
+	fmt.Printf("%s\n", showVal(v))
 }
 
 // Type checks
@@ -154,10 +166,24 @@ func (a Assign) check(t TyState) bool {
 	return t[x] == a.rhs.infer(t)
 }
 func (while While) check(t TyState) bool {
-	return while.cond.infer(t) == TyBool
+	if while.cond.infer(t) != TyBool {
+		return false
+	} else if !while.do.check(t) {
+		return false
+	} else {
+		return true
+	}
 }
 func (ite IfThenElse) check(t TyState) bool {
-	return ite.cond.infer(t) == TyBool
+	if ite.cond.infer(t) != TyBool {
+		return false
+	} else if !ite.thenBl.check(t) {
+		return false
+	} else if !ite.elseBl.check(t) {
+		return false
+	} else {
+		return true
+	}
 }
 func (p Print) check(t TyState) bool {
 	if p.printExp.infer(t) == TyIllTyped {
@@ -165,4 +191,16 @@ func (p Print) check(t TyState) bool {
 	} else {
 		return true
 	}
+}
+
+// Helper function to update a state
+func (s1 ValState) update(s2 ValState) ValState {
+	s3 := make(map[string]Val)
+	for k, v := range s1 {
+		s3[k] = v
+		if (s2[k] != s3[k]) && (s2[k].flag == s3[k].flag) {
+			s3[k] = s2[k]
+		}
+	}
+	return s3
 }

@@ -9,25 +9,15 @@ type ValState map[string]Val
 type TyState map[string]Type
 
 func main() {
-
 	fmt.Printf("\n")
 
-	//ex1()
-	//ex2()
-	//ex3()
-	//ex4()
-
-	//ex5()
-	//ex6()
-	ex7()
+	fib()
+	ex01()
+	ex02()
+	ex03()
+	ex04()
+	ex05()
+	ex06()
+	ex07()
+	ex08()
 }
-
-// TODO: Beispiele für alle speziellen Fälle
-// TODO: Leaking scopes?! -->
-//								1. Bei While/If-Then-Else muss eine Kopie des State verwendet werden
-//								2. Diese Kopie darf sich ändern
-//								3. Wenn die Schleife vorbei ist, wird geprüft:
-//									--> Ist die Variable geändert? Ist sie auch im alten State? Passt der Typ?
-//								4. Es wird entsprechend der alte State angepasst
-//								WICHTIG: Die die Condition der Schleife nutzt den neuen, veränderbaren State!!!
-// TODO: (Parser)

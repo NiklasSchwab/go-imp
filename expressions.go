@@ -1,6 +1,9 @@
 package main
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Expression interface
 type Exp interface {
@@ -58,7 +61,7 @@ func (e Or) pretty() string {
 	var x string
 	x = "("
 	x += e[0].pretty()
-	x += "||"
+	x += " || "
 	x += e[1].pretty()
 	x += ")"
 	return x
@@ -67,7 +70,7 @@ func (e And) pretty() string {
 	var x string
 	x = "("
 	x += e[0].pretty()
-	x += "&&"
+	x += " && "
 	x += e[1].pretty()
 	x += ")"
 	return x
@@ -165,8 +168,15 @@ func (e Negation) eval(s ValState) Val {
 func (e Equal) eval(s ValState) Val {
 	b1 := e[0].eval(s)
 	b2 := e[1].eval(s)
-	if b1.flag == ValueBool && b2.flag == ValueBool {
-		return mkBool(b1.valB == b2.valB)
+	if b1.flag == b2.flag {
+		switch b1.flag {
+		case ValueInt:
+			return mkBool(b1.valI == b2.valI)
+		case ValueBool:
+			return mkBool(b1.valB == b2.valB)
+		case Undefined:
+			return mkUndefined()
+		}
 	}
 	return mkUndefined()
 }
@@ -223,6 +233,7 @@ func (e Or) infer(t TyState) Type {
 	if t1 == TyBool && t2 == TyBool {
 		return TyBool
 	}
+	fmt.Println("ILL TYPED OR", t1, t2)
 	return TyIllTyped
 }
 func (e And) infer(t TyState) Type {
@@ -238,14 +249,16 @@ func (e Negation) infer(t TyState) Type {
 	if t1 == TyBool {
 		return TyBool
 	}
+	fmt.Println("ILL TYPED NEGATION")
 	return TyIllTyped
 }
 func (e Equal) infer(t TyState) Type {
 	t1 := e[0].infer(t)
 	t2 := e[1].infer(t)
-	if t1 == TyBool && t2 == TyBool {
+	if t1 == t2 {
 		return TyBool
 	}
+	fmt.Println("ILL TYPED EQUAL")
 	return TyIllTyped
 }
 func (e Lesser) infer(t TyState) Type {
