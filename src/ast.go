@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-// Helper functions to build ASTs by hand
-
+// run an expression (defined with an AST)
+// prints the code, evaluates it and type checks it
 func runExp(e Exp) {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
@@ -14,6 +14,8 @@ func runExp(e Exp) {
 	fmt.Printf("\n")
 }
 
+// run a full programm (defined with an AST)
+// prints the code, evaluates it and type checks it
 func (prg Prog) run() {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
@@ -30,8 +32,7 @@ func (prg Prog) run() {
 
 }
 
-// Expressions
-
+// helper functions for expressions to create ASTs
 func number(x int) Exp {
 	return Num(x)
 }
@@ -66,8 +67,7 @@ func variable(x string) Exp {
 	return Var(x)
 }
 
-// Statements
-
+// helper functions for statements to create ASTs
 func prog(b Block) Prog {
 	return [1]Block{b}
 }
@@ -93,11 +93,12 @@ func sPrint(s Exp) Stmt {
 	return Print{s}
 }
 
-// Helper to create a program from multiple "lines" of statements
+// helper function to create a program from multiple "lines" of statements
 func generateProg(lines []Stmt) Prog {
 	return prog(block(generateSeq(lines)))
 }
 
+// helper function to create sequence from multiple "lines" of statements
 func generateSeq(lines []Stmt) Stmt {
 	if len(lines) > 1 {
 		return sequence(lines[0], generateSeq(lines[1:]))

@@ -1,10 +1,15 @@
 package main
 
-// Examples
+// all examples are written with help of the AST helper functions
+// the fibonacci example shows how examples are written and executed
+
+// this example shows the fibonacci calculation
 func fib() {
+	// declare "lines" of the programm
 	l01 := declaration("prev", number(-1))
 	l02 := declaration("result", number(1))
 
+	// declare the "do" block of a while loop
 	do01 := declaration("sum", plus(variable("prev"), variable("result")))
 	do02 := assignment("prev", variable("result"))
 	do03 := assignment("result", variable("sum"))
@@ -13,7 +18,10 @@ func fib() {
 
 	l03 := while(lesser(variable("result"), number(50)), doBlock)
 
+	// generate a program from multiple "lines" of "code"
 	prog := generateProg([]Stmt{l01, l02, l03})
+
+	// run the program
 	prog.run()
 }
 

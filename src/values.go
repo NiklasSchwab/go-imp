@@ -1,6 +1,6 @@
 package main
 
-// Of what kind is the value? --> ValueInt, ValueBool or Undefined
+// value "kind" (the type of a value) are expressed as integers: Int value = 0, Bool value = 1, Undefined = 2
 type Kind int
 
 const (
@@ -9,29 +9,26 @@ const (
 	Undefined Kind = 2
 )
 
-// A value object consists of a flag (Kind), a valI and/or a valB
+// value object consist of a flag (Kind) that contains "type" information,
+// an integer value and/or a boolean value
 type Val struct {
 	flag Kind
 	valI int
 	valB bool
 }
 
-// Return a new int value object
+// functions to create new value objects
 func mkInt(x int) Val {
 	return Val{flag: ValueInt, valI: x}
 }
-
-// Return a new bool value object
 func mkBool(x bool) Val {
 	return Val{flag: ValueBool, valB: x}
 }
-
-// Return a new undefined type value object
 func mkUndefined() Val {
 	return Val{flag: Undefined}
 }
 
-// Return the value object's value as pretty string
+// return the value object's value as pretty string
 func showVal(v Val) string {
 	var s string
 	switch {

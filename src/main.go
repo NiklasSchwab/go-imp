@@ -2,15 +2,16 @@ package main
 
 import "fmt"
 
-// Value State is a mapping from variable names to values
+// ValState is a mapping from variable names to values
 type ValState map[string]Val
 
-// Value State is a mapping from variable names to types
+// TyState is a mapping from variable names to types
 type TyState map[string]Type
 
 func main() {
 	fmt.Printf("\n")
 
+	// run the individual examples
 	fib()
 	ex01()
 	ex02()

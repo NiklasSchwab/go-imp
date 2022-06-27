@@ -1,6 +1,6 @@
 package main
 
-// What's the type? --> Int, Bool or IllTyped
+// types are expressed as integers: IllTyped = 0, Int = 1, Bool = 2
 type Type int
 
 const (
@@ -9,7 +9,7 @@ const (
 	TyBool     Type = 2
 )
 
-// Returns the type as string
+// returns the type as string
 func showType(t Type) string {
 	var s string
 	switch {

@@ -2,15 +2,14 @@ package main
 
 import "fmt"
 
-// Statement interface
+// statement interface
 type Stmt interface {
 	pretty() string
 	eval(s ValState)
 	check(t TyState) bool
 }
 
-// Different statements
-
+// the various different statements
 type Prog [1]Block
 type Block [1]Stmt
 type Seq [2]Stmt
@@ -35,7 +34,7 @@ type Print struct {
 	printExp Exp
 }
 
-// Pretty prints
+// methods to pretty print statements
 func (prg Prog) pretty() string {
 	return prg[0].pretty()
 }
@@ -61,7 +60,7 @@ func (p Print) pretty() string {
 	return "print " + p.printExp.pretty()
 }
 
-// Evals
+// methods to evaluate statements
 func (prg Prog) eval(s ValState) {
 	prg[0].eval(s)
 }
@@ -139,7 +138,7 @@ func (p Print) eval(s ValState) {
 	fmt.Printf("%s\n", showVal(v))
 }
 
-// Type checks
+// methods to type-check methods
 func (prg Prog) check(t TyState) bool {
 	return prg[0].check(t)
 }
@@ -193,7 +192,7 @@ func (p Print) check(t TyState) bool {
 	}
 }
 
-// Helper function to update a state
+// helper function to update the value state environment
 func (s1 ValState) update(s2 ValState) ValState {
 	s3 := make(map[string]Val)
 	for k, v := range s1 {

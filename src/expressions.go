@@ -5,15 +5,14 @@ import (
 	"strconv"
 )
 
-// Expression interface
+// expression interface
 type Exp interface {
 	pretty() string
 	eval(s ValState) Val
 	infer(t TyState) Type
 }
 
-// Different expressions
-
+// the various different expressions
 type Num int
 type Bool bool
 type Plus [2]Exp
@@ -26,8 +25,7 @@ type Lesser [2]Exp
 type Group [1]Exp
 type Var string
 
-// Pretty prints
-
+// methods to pretty print expressions
 func (x Num) pretty() string {
 	return strconv.Itoa(int(x))
 }
@@ -112,8 +110,7 @@ func (x Var) pretty() string {
 	return (string)(x)
 }
 
-// Evaluator
-
+// methods to evaluate expressions
 func (x Num) eval(s ValState) Val {
 	return mkInt((int)(x))
 }
@@ -203,8 +200,7 @@ func (x Var) eval(s ValState) Val {
 	return mkUndefined()
 }
 
-// Type inferencer/checker
-
+// methods to infer/check types of expressions
 func (x Num) infer(t TyState) Type {
 	return TyInt
 }
