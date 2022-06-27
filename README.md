@@ -1,7 +1,7 @@
 <br />
 <div align="center">
     <a href="https://www.h-ka.de/">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/HKA_Logo_Logoleiste_RGB.png" alt="Logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/HKA_Logo_Logoleiste_RGB.png" alt="Logo" width="50%">
     </a>
     <h1 align="center">A Go IMP</h1>
     <p align="center">
