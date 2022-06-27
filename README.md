@@ -21,3 +21,20 @@ This repository contains the final project for the Model-Based Software Developm
 This project is based on the given code by Prof. Sulzmann.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- STRUCTURE & FILES -->
+## Project Structure & Files
+In order to avoid any complication with dependencies, this project only makes use of a single package. Nevertheless, the code is spread through multiple files:
+
+| File           | Description                                                              |
+|----------------|--------------------------------------------------------------------------|
+| main.go        | Declares maps for Value- and Type-States and calls the example functions |
+| types.go       | Contains functionality to handle typing                                  |
+| values.go      | Contains functionality to handle values of certain types                 |
+| expressions.go | Contains all code regarding expressions                                  |
+| statements.go  | Contains all code regarding statements                                   |
+| ast.go         | Contains helper functions to generate and "run" ASTs                     |
+| examples.go    | Contains examples as functions, each defining and running "code" as ASTs |
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
