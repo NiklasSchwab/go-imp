@@ -221,7 +221,7 @@ func (p Print) check(t TyState) bool {
 	}
 }
 
-// helper function to update the value state environment
+// helper method to update the value state environment
 // this is necessary to support nested scopes and prevent unwanted leaking
 // returns a value state, which is the updated version of a ValState s1, updated with values from a ValState s2
 

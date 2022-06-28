@@ -66,7 +66,7 @@ func ex01() {
 	prog.run()
 }
 
-// this examples shows if-then-else with scoping rules and the use of and
+// this examples shows if-then-else with scoping rules and the use of and (short-circuit evaluation)
 func ex02() {
 	// this example is based on ex01
 
@@ -75,7 +75,8 @@ func ex02() {
 
 	// cond is (x == 0) && (!y == false)
 	// x == 0 evaluates to false, so the condition will always immediately be false
-	cond := and(equal(variable("x"), number(0)), equal(negation(variable("y")), boolean(false)))
+	// --> y == 0 doesn't work, but the and still works --> short circuit evaluation!
+	cond := and(equal(variable("x"), number(0)), equal(variable("y"), number(0)))
 
 	// then-block can be ignored in this example
 	then01 := assignment("x", plus(variable("x"), number(10)))
