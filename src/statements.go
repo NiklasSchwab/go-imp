@@ -110,7 +110,7 @@ func (while While) eval(s1 ValState) {
 				// if the while condition is false, "break" the while loop
 				// now, update the original state, based on the temp state
 				s3 := s1.update(s2)
-				for k, _ := range s1 {
+				for k := range s1 {
 					s1[k] = s3[k]
 				}
 				break
@@ -145,7 +145,7 @@ func (ite IfThenElse) eval(s1 ValState) {
 
 	// after evaluatin the if-then-else, update the original state based on the temp state
 	s3 := s1.update(s2)
-	for k, _ := range s1 {
+	for k := range s1 {
 		s1[k] = s3[k]
 	}
 }
