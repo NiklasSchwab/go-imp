@@ -21,4 +21,5 @@ func main() {
 	ex06()
 	ex07()
 	ex08()
+	ex09()
 }

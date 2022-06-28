@@ -154,24 +154,48 @@ func ex05() {
 	prog.run()
 }
 
+// this example shows the behaviour of undeclared variables
 func ex06() {
-	l01 := assignment("x", number(4))
-	prog := generateProg([]Stmt{l01})
-	prog.run()
-}
-
-func ex07() {
+	// x was never declared!
 	l01 := sPrint(variable("x"))
 	prog := generateProg([]Stmt{l01})
 	prog.run()
+
+	// this example won't type check and "Undefined" will be printed
 }
 
-func ex08() {
+// this example shows type miss-match with ==
+func ex07() {
 	l01 := declaration("x", number(4))
-	do := block(sPrint(variable("x")))
+
+	// x is of type integer, but a boolean is expected --> evaluation of the while condition will fail
+	// also won't type check
 	cond := equal(variable("x"), boolean(true))
+	do := block(sPrint(variable("x")))
+
 	l02 := while(cond, do)
 
 	prog := generateProg([]Stmt{l01, l02})
+	prog.run()
+}
+
+// this example shows type miss-match when re-assigning a variable
+func ex08() {
+	l01 := declaration("x", number(5))
+	// x is of type integer, so it can't be assigned to type boolean!
+	l02 := assignment("x", boolean(true))
+	prog := generateProg([]Stmt{l01, l02})
+	prog.run()
+}
+
+// this example shows how to use more complex expressions in declarations
+func ex09() {
+	l01 := declaration("x", number(5))
+	// re-declaration works with another type than the original one! --> x := x < 10 --> true
+	l02 := declaration("x", lesser(variable("x"), number(10)))
+	// "true" will be printed
+	l03 := sPrint(variable("x"))
+
+	prog := generateProg([]Stmt{l01, l02, l03})
 	prog.run()
 }
