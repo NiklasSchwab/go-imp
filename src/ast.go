@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+var exampleRunCounter int
+
+func init() {
+	exampleRunCounter = 0
+}
+
 // run an expression (defined with an AST)
 // prints the code, evaluates it and type checks it
 func runExp(e Exp) {
@@ -17,10 +23,13 @@ func runExp(e Exp) {
 // run a full programm (defined with an AST)
 // prints the code, evaluates it and type checks it
 func (prg Prog) run() {
+	exampleRunCounter += 1
+
 	s := make(map[string]Val)
 	t := make(map[string]Type)
 
 	fmt.Printf("\n")
+	fmt.Printf("EXAMPLE %d\n", exampleRunCounter)
 	fmt.Printf("CODE FROM AST:\n")
 	fmt.Printf("%s\n\n", prg.pretty())
 	fmt.Printf("TYPE CHECK: %t\n\n", prg.check(t))
@@ -29,7 +38,6 @@ func (prg Prog) run() {
 	fmt.Printf("\n")
 	fmt.Printf("\n**************************\n")
 	fmt.Printf("\n")
-
 }
 
 // helper functions for expressions to create ASTs
